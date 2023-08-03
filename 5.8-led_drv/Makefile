@@ -1,0 +1,12 @@
+KERN_DIR = /home/book/100ask_imx6ull-sdk/Linux-4.9.88
+
+all:
+	make -C $(KERN_DIR) M=`pwd` modules
+	$(CROSS_COMPILE)gcc -o led_drv_test led_drv_test.c
+clean:
+	make -C $(KERN_DIR) M=`pwd` modules clean
+	rm -rf modules.order
+	rm -f led_drv_test
+
+yhbled_drv-y := led_drv.o led_drv_board.o led_drv_resource.o
+obj-m += yhbled_drv.o
