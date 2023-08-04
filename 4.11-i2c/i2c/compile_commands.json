@@ -1,0 +1,50 @@
+[
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-I",
+            "./include",
+            "-o",
+            "at24c02_test",
+            "i2cbusses.c",
+            "-isystem",
+            "/home/book/100ask_imx6ull-sdk/ToolChain/arm-buildroot-linux-gnueabihf_sdk-buildroot/arm-buildroot-linux-gnueabihf/sysroot/usr/include",
+            "-isystem",
+            "/home/book/100ask_imx6ull-sdk/ToolChain/arm-buildroot-linux-gnueabihf_sdk-buildroot/bin/../lib/gcc/arm-buildroot-linux-gnueabihf/7.5.0/include",
+            "-isystem",
+            "/home/book/100ask_imx6ull-sdk/ToolChain/arm-buildroot-linux-gnueabihf_sdk-buildroot/bin/../lib/gcc/arm-buildroot-linux-gnueabihf/7.5.0/include-fixed",
+            "-isystem",
+            "/home/book/100ask_imx6ull-sdk/ToolChain/arm-buildroot-linux-gnueabihf_sdk-buildroot/bin/../lib/gcc/arm-buildroot-linux-gnueabihf/7.5.0/../../../../arm-buildroot-linux-gnueabihf/include",
+            
+        ],
+        "directory": "/home/book/nfs_rootfs/i2c",
+        "file": "i2cbusses.c"
+    },
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-I",
+            "./include",
+            "-o",
+            "at24c02_test",
+            "at24c02_test.c"
+        ],
+        "directory": "/home/book/nfs_rootfs/i2c",
+        "file": "at24c02_test.c"
+    },
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-I",
+            "./include",
+            "-o",
+            "at24c02_test",
+            "smbus.c"
+        ],
+        "directory": "/home/book/nfs_rootfs/i2c",
+        "file": "smbus.c"
+    }
+]
