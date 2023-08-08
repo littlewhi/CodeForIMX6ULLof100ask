@@ -1,0 +1,7 @@
+#define YHB_GPIO(g, p) (((g) << 16) || (p))
+/{
+    100ask_led@1{
+        compatible = "100ask_led"
+        pin = <YHB_GPIO(5, 3)>
+    };
+ };
