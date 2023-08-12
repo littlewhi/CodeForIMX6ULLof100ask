@@ -31,25 +31,18 @@
 #include <linux/regmap.h>
 #include <linux/pinctrl/consumer.h>
 #include <linux/of_device.h>
-#include <linux/poll.h>
+
 #include <linux/console.h>
 #include <linux/types.h>
 #include <linux/gpio/consumer.h>
 #include <linux/of_gpio.h>
 #include <linux/slab.h>
 
-/* 文件异步通知方式需要驱动提供drv_fasy(有内核自动根据用户app是否设置FASYNC调用)
- * 并且需要驱动主动发送信号给用户进程kill_fasync()
- */
-static struct fasync_struct *fasync;
-/* poll机制需要驱动提供drv_poll */
-static DECLARE_WAIT_QUEUE_HEAD( yhb_key_poll_queue );
+static struct class *cl;
+static int major;
 
 /* 阻塞式查询，需要一个等待队列 */
 static DECLARE_WAIT_QUEUE_HEAD( yhb_key_wait_queue );
-
-static struct class *cl;
-static int major;
 
 
 /* 数据缓冲区，环形队列 */
@@ -108,6 +101,7 @@ static struct yhb_key_t key_data_queue_remove( void )
     return val;
 }
 
+
 /* 返回的是一个长度为2的short数组，并且不区分哪个key，有数据就返回 */
 static ssize_t yhb_key_read( struct file *filp, char __user * buf, size_t size, loff_t * lp )
 {
@@ -130,26 +124,9 @@ static ssize_t yhb_key_read( struct file *filp, char __user * buf, size_t size, 
      return sizeof(val.key_data) + sizeof(val.key);
 }
 
-/* 休眠机制有内核提供，驱动只需要挂载队列和提供返回状态 */
-unsigned int yhb_key_poll( struct file *filp, struct poll_table_struct *wait )
-{
-    poll_wait(filp, &yhb_key_poll_queue, wait);
-
-    /* 不为空时表示有内容可读 */
-    return dq.empty() ? 0 : (POLLIN | POLLRDNORM);
-}
-
-/* 开启或关闭异步功能由内核进行调用 */
-int yhb_key_fasync( int fd, struct file *filp, int on)
-{
-    return fasync_helper(fd, filp, on, &fasync);
-}
-
 static struct file_operations fops = {
     .owner = THIS_MODULE,
-    .read = yhb_key_read,
-    .poll = yhb_key_poll,
-    .fasync = yhb_key_fasync,
+    .read = yhb_key_read
 };
 
 
@@ -161,7 +138,7 @@ struct yhb_gpio_key
 
 static struct yhb_gpio_key *yhb_gpio_keys;
 
-static irqreturn_t yhb_key_interrupt( int irq, void *d )
+static irqreturn_t yhb_key_thread( int irq, void *d )
 {
     struct yhb_gpio_key *keys = (struct yhb_gpio_key *)d;
     int val = gpio_get_value( keys->gpio );
@@ -169,8 +146,6 @@ static irqreturn_t yhb_key_interrupt( int irq, void *d )
 
     dq.add( keys->gpio, val );
     wake_up_interruptible( &yhb_key_wait_queue );
-    wake_up_interruptible( &yhb_key_poll_queue );
-    kill_fasync( &fasync, SIGIO, POLL_IN );
 
     return IRQ_HANDLED;
 } 
@@ -206,7 +181,7 @@ static int yhb_key_probe( struct platform_device *pdev )
         yhb_gpio_keys[i].flags = flags;
 
         irq = gpio_to_irq( gpio );
-        if( request_threaded_irq( irq, yhb_key_interrupt, NULL,
+        if( request_threaded_irq( irq, yhb_key_thread, NULL,
         IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING, "yhb_keys", &yhb_gpio_keys[i] ) )
         {
             printk( "ERROR : %s %s %d\n", __FILE__, __FUNCTION__, __LINE__ );
