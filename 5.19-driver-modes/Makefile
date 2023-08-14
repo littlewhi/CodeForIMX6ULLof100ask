@@ -9,3 +9,4 @@ clean:
 	rm -f led_drv_test
 
 obj += block_key_drv.o
+obj += poll_key_drv.o
