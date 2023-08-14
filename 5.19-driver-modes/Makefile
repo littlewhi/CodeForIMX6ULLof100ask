@@ -8,4 +8,3 @@ clean:
 	rm -rf modules.order
 	rm -f led_drv_test
 
-obj-m += block_key_drv.o poll_key_drv.o fasy_key_drv.o
