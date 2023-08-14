@@ -14,3 +14,4 @@ obj += fasy_key_drv.o
 obj += tasklet_key_drv.o
 obj += timer_key_drv.o
 obj += workqueue_key_drv.o
+obj += threaded_key_drv.o
