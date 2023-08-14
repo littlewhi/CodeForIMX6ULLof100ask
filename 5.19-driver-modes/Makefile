@@ -10,3 +10,4 @@ clean:
 
 obj += block_key_drv.o
 obj += poll_key_drv.o
+obj += fasy_key_drv.o
