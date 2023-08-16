@@ -1,7 +1,0 @@
-#. p.sh ~/nfs_rootfs/com/block_key_drv.c ./5.19-driver-modes/ block_key_drv.o "add block mode driver"
-. p.sh ~/nfs_rootfs/com/poll_key_drv.c ./5.19-driver-modes/ poll_key_drv.o "add poll mode driver"
-. p.sh ~/nfs_rootfs/com/fasy_key_drv.c ./5.19-driver-modes/ fasy_key_drv.o "add fasycn mode driver"
-. p.sh ~/nfs_rootfs/com/tasklet_key_drv.c ./5.19-driver-modes/ tasklet_key_drv.o "add taklet data structure in driver"
-. p.sh ~/nfs_rootfs/com/timer_key_drv.c ./5.19-driver-modes/ timer_key_drv.o "add timer mechine in driver"
-. p.sh ~/nfs_rootfs/com/workqueue_key_drv.c ./5.19-driver-modes/ workqueue_key_drv.o "add workqueue usage in driver"
-. p.sh ~/nfs_rootfs/com/threaded_key_drv.c ./5.19-driver-modes/ threaded_key_drv.o "add threaded interrupt to software part in driver"
